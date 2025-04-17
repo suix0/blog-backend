@@ -19,11 +19,13 @@ exports.registerUser = async (req, res) => {
   }
 
   const encryptedPassword = await bcrypt.hash(req.body.password, 10);
+
   // Otherwise, register the user
   await prisma.user.create({
     data: {
       username: req.body.username,
       password: encryptedPassword,
+      role: req.body.role === "ADMIN" ? "ADMIN" : "USER",
     },
   });
 

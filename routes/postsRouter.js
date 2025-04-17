@@ -1,12 +1,14 @@
 const { Router } = require("express");
 const postsController = require("../controllers/postsController");
-const { isAuthor } = require("./authMiddleware");
+const { isUser } = require("./authMiddleware");
 
 const postsRouter = Router();
 
-postsRouter.get("/unpublished", isAuthor, postsController.getUnpublishedPosts);
-
 postsRouter.get("/", postsController.getPublishedPosts);
-postsRouter.post("/", isAuthor, postsController.createPost);
+postsRouter.post("/", isUser, postsController.createPost);
+
+postsRouter.get("/unpublished", isUser, postsController.getUnpublishedPosts);
+
+postsRouter.get("/:postId/comments", isUser, postsController.getPostComments);
 
 module.exports = postsRouter;

@@ -24,6 +24,13 @@ exports.getUnpublishedPosts = async (req, res) => {
 };
 
 exports.createPost = async (req, res) => {
+  if (req.user.role === "USER") {
+    res.json({
+      error: "You are not authorized to perform this action",
+    });
+    return;
+  }
+
   await prisma.post.create({
     data: {
       published: req.body.published === "true",
@@ -37,3 +44,5 @@ exports.createPost = async (req, res) => {
     message: "Post created successfuly",
   });
 };
+
+exports.getPostComments = (req, res) => {};
