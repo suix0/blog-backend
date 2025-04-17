@@ -1,6 +1,6 @@
 const { PrismaClient } = require("../generated/prisma");
 const jwt = require("jsonwebtoken");
-
+const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
 exports.registerUser = async (req, res) => {
@@ -17,11 +17,12 @@ exports.registerUser = async (req, res) => {
     });
   }
 
+  const encryptedPassword = await bcrypt.hash(req.body.password, 10);
   // Otherwise, register the user
   await prisma.user.create({
     data: {
       username: req.body.username,
-      password: req.body.password,
+      password: encryptedPassword,
     },
   });
 
@@ -45,11 +46,16 @@ exports.loginUser = async (req, res) => {
   }
 
   // Check if the password matches
-  const passwordMatches = user[0].password === req.body.password;
+  const passwordMatches = await bcrypt.compare(
+    req.body.password,
+    user[0].password
+  );
+
   if (!passwordMatches) {
-    return res.json({
+    res.json({
       passwordIncorrect: true,
     });
+    return;
   }
 
   // Create a JWT token
