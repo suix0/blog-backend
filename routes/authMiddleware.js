@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 const isUser = asyncHandler((req, res, next) => {
   const bearerHeader = req.headers["authorization"];
 
-  if (typeof bearerHeader === undefined) {
-    throw new Error("Unauthorized user.");
+  if (bearerHeader === undefined) {
+    return res.sendStatus(404);
   }
 
   const token = bearerHeader.split(" ")[1];

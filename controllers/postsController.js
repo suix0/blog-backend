@@ -45,4 +45,38 @@ exports.createPost = async (req, res) => {
   });
 };
 
-exports.getPostComments = (req, res) => {};
+exports.getPostComments = async (req, res) => {
+  const postId = Number(req.params.postId);
+  const comments = await prisma.comment.findMany({
+    where: {
+      postId: postId,
+    },
+    include: {
+      User: {
+        select: {
+          username: true,
+        },
+      },
+    },
+  });
+
+  res.json({
+    comments,
+  });
+};
+
+exports.createPostComments = async (req, res) => {
+  const postId = Number(req.params.postId);
+  const comment = await prisma.comment.create({
+    data: {
+      comment: req.body.comment,
+      userId: req.user.id,
+      postId: postId,
+    },
+  });
+
+  res.json({
+    comment,
+    message: "Comment created succesfully.",
+  });
+};
