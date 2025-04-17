@@ -23,6 +23,15 @@ exports.getUnpublishedPosts = async (req, res) => {
   res.json({ posts });
 };
 
+exports.getPost = async (req, res) => {
+  const post = await prisma.post.findMany({
+    where: {
+      postId: Number(req.params.postId),
+    },
+  });
+  res.json({ post });
+};
+
 exports.createPost = async (req, res) => {
   if (req.user.role === "USER") {
     res.json({
@@ -79,4 +88,19 @@ exports.createPostComments = async (req, res) => {
     comment,
     message: "Comment created succesfully.",
   });
+};
+
+exports.postLikes = async (req, res) => {
+  const postId = Number(req.params.postId);
+  await prisma.post.update({
+    where: {
+      id: postId,
+    },
+    data: {
+      likes: {
+        increment: 1,
+      },
+    },
+  });
+  res.sendStatus(200);
 };

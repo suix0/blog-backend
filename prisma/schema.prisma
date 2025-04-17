@@ -30,6 +30,7 @@ model Post {
   published Boolean
   title     String
   content   String
+  likes     Int?      @default(0)
   comments  Comment[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
