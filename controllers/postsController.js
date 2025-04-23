@@ -7,6 +7,9 @@ exports.getPublishedPosts = async (req, res) => {
     where: {
       published: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   res.json({
@@ -26,7 +29,7 @@ exports.getUnpublishedPosts = async (req, res) => {
 exports.getPost = async (req, res) => {
   const post = await prisma.post.findMany({
     where: {
-      postId: Number(req.params.postId),
+      id: Number(req.params.postId),
     },
   });
   res.json({ post });

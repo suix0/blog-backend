@@ -66,9 +66,8 @@ exports.loginUser = async (req, res) => {
   });
 
   if (user.length < 1) {
-    return res.json({
-      userNonexistent: true,
-    });
+    res.status(500).json({ error: "Username does not exist." });
+    return;
   }
 
   // Check if the password matches
@@ -78,8 +77,8 @@ exports.loginUser = async (req, res) => {
   );
 
   if (!passwordMatches) {
-    res.json({
-      passwordIncorrect: true,
+    res.status(500).json({
+      error: "Password Incorrect.",
     });
     return;
   }
