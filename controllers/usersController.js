@@ -26,6 +26,16 @@ const validateUser = [
     .withMessage("Password can't be empty.")
     .isLength({ min: 8 })
     .withMessage("Password must have a minimum of 8 characters"),
+  body("confirmPassword")
+    .trim()
+    .notEmpty()
+    .withMessage("Confirm Password can't be empty")
+    .isLength({ min: 8 })
+    .withMessage("Confirm password must have a minimum of 8 characters")
+    .custom((value, { req }) => {
+      return value === req.body.password;
+    })
+    .withMessage("Passwords did not match. Try again."),
 ];
 
 exports.registerUser = [
@@ -34,7 +44,7 @@ exports.registerUser = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      res.json({
+      res.status(500).json({
         errors: errors.array(),
       });
       return;
@@ -42,7 +52,6 @@ exports.registerUser = [
 
     const encryptedPassword = await bcrypt.hash(req.body.password, 10);
 
-    // Otherwise, register the user
     await prisma.user.create({
       data: {
         username: req.body.username,
