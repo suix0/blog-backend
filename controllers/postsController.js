@@ -31,6 +31,25 @@ exports.getPost = async (req, res) => {
     where: {
       id: Number(req.params.postId),
     },
+    include: {
+      comments: {
+        include: {
+          User: {
+            select: {
+              username: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      User: {
+        select: {
+          username: true,
+        },
+      },
+    },
   });
   res.json({ post });
 };
