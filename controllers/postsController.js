@@ -98,11 +98,19 @@ exports.getPostComments = async (req, res) => {
 
 exports.createPostComments = async (req, res) => {
   const postId = Number(req.params.postId);
+  console.log(postId);
   const comment = await prisma.comment.create({
     data: {
       comment: req.body.comment,
       userId: req.user.id,
       postId: postId,
+    },
+    include: {
+      User: {
+        select: {
+          username: true,
+        },
+      },
     },
   });
 
