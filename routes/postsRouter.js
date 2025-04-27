@@ -5,7 +5,7 @@ const { isUser } = require("./authMiddleware");
 const postsRouter = Router();
 
 postsRouter.get("/", postsController.getPublishedPosts);
-postsRouter.get("/unpublished", isUser, postsController.getUnpublishedPosts);
+postsRouter.get("/", isUser, postsController.getUnpublishedPosts);
 postsRouter.get("/:postId", postsController.getPost);
 postsRouter.post("/", isUser, postsController.createPost);
 
@@ -15,8 +15,4 @@ postsRouter.post(
   isUser,
   postsController.createPostComments
 );
-
-// Update number of likes of a specific post
-postsRouter.put("/:postId/likes", postsController.postLikes);
-
 module.exports = postsRouter;

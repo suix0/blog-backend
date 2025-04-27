@@ -10,6 +10,13 @@ exports.getPublishedPosts = async (req, res) => {
     orderBy: {
       createdAt: "desc",
     },
+    include: {
+      User: {
+        select: {
+          username: true,
+        },
+      },
+    },
   });
 
   res.json({
@@ -98,7 +105,6 @@ exports.getPostComments = async (req, res) => {
 
 exports.createPostComments = async (req, res) => {
   const postId = Number(req.params.postId);
-  console.log(postId);
   const comment = await prisma.comment.create({
     data: {
       comment: req.body.comment,
@@ -122,7 +128,7 @@ exports.createPostComments = async (req, res) => {
 
 exports.postLikes = async (req, res) => {
   const postId = Number(req.params.postId);
-  await prisma.post.update({
+  const updatedPost = await prisma.post.update({
     where: {
       id: postId,
     },
@@ -131,6 +137,35 @@ exports.postLikes = async (req, res) => {
         increment: 1,
       },
     },
+    include: {
+      User: {
+        select: {
+          username: true,
+        },
+      },
+    },
   });
-  res.sendStatus(200);
+  res.json({ updatedPost });
+};
+
+exports.deleteLikes = async (req, res) => {
+  const postId = Number(req.params.postId);
+  const updatedPost = await prisma.post.update({
+    where: {
+      id: postId,
+    },
+    data: {
+      likes: {
+        decrement: 1,
+      },
+    },
+    include: {
+      User: {
+        select: {
+          username: true,
+        },
+      },
+    },
+  });
+  res.json({ updatedPost });
 };

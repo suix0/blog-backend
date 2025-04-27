@@ -1,0 +1,9 @@
+const { Router } = require("express");
+const authorsController = require("../controllers/authorsController");
+const { isUser } = require("./authMiddleware");
+
+const authorsRouter = Router();
+
+authorsRouter.get("/:authorId/posts", isUser, authorsController.getAuthorPosts);
+
+module.exports = authorsRouter;
