@@ -7,7 +7,6 @@ const postsRouter = Router();
 postsRouter.get("/", postsController.getPublishedPosts);
 postsRouter.get("/", isUser, postsController.getUnpublishedPosts);
 postsRouter.get("/:postId", postsController.getPost);
-postsRouter.post("/", isUser, postsController.createPost);
 
 postsRouter.get("/:postId/comments", isUser, postsController.getPostComments);
 postsRouter.post(

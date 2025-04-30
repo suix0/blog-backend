@@ -5,5 +5,6 @@ const { isUser } = require("./authMiddleware");
 const authorsRouter = Router();
 
 authorsRouter.get("/:authorId/posts", isUser, authorsController.getAuthorPosts);
+authorsRouter.post("/:authorId/posts", isUser, authorsController.createPost);
 
 module.exports = authorsRouter;

@@ -10,7 +10,7 @@ exports.getAuthorPosts = async (req, res) => {
       .json({ error: "You are not authorized to perform this action" });
   }
   // Get published posts
-  const authorPublishedPosts = await prisma.post.findMany({
+  const publishedPosts = await prisma.post.findMany({
     where: {
       userId: req.user.id,
       published: true,
@@ -18,12 +18,24 @@ exports.getAuthorPosts = async (req, res) => {
   });
 
   // Get unpublished posts
-  const authorUnpublishedPosts = await prisma.post.findMany({
+  const unpublishedPosts = await prisma.post.findMany({
     where: {
       userId: req.user.id,
       published: false,
     },
   });
 
-  res.json({ authorPublishedPosts, authorUnpublishedPosts });
+  res.json({ publishedPosts, unpublishedPosts });
+};
+
+exports.createPost = async (req, res) => {
+  const newPost = await prisma.post.create({
+    data: {
+      userId: req.user.id,
+      published: true,
+      title: req.body.title,
+      content: req.body.content,
+    },
+  });
+  res.json({ newPost });
 };
