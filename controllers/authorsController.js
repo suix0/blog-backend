@@ -39,3 +39,16 @@ exports.createPost = async (req, res) => {
   });
   res.json({ newPost });
 };
+
+exports.updatePost = async (req, res) => {
+  const updatedPost = await prisma.post.update({
+    where: {
+      id: req.body.postId,
+    },
+    data: {
+      title: req.body.title,
+      content: req.body.content,
+    },
+  });
+  res.json({ updatedPost });
+};

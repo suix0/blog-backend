@@ -6,5 +6,6 @@ const authorsRouter = Router();
 
 authorsRouter.get("/:authorId/posts", isUser, authorsController.getAuthorPosts);
 authorsRouter.post("/:authorId/posts", isUser, authorsController.createPost);
+authorsRouter.put("/:authorId/posts", isUser, authorsController.updatePost);
 
 module.exports = authorsRouter;
