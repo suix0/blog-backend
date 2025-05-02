@@ -52,3 +52,35 @@ exports.updatePost = async (req, res) => {
   });
   res.json({ updatedPost });
 };
+
+exports.deletePost = async (req, res) => {
+  await prisma.comment.deleteMany({
+    where: {
+      postId: req.body.id,
+    },
+  });
+
+  await prisma.post.delete({
+    where: {
+      id: req.body.id,
+    },
+  });
+
+  // Get updated published posts
+  const publishedPosts = await prisma.post.findMany({
+    where: {
+      userId: req.user.id,
+      published: true,
+    },
+  });
+
+  // Get updated unpublished posts
+  const unpublishedPosts = await prisma.post.findMany({
+    where: {
+      userId: req.user.id,
+      published: false,
+    },
+  });
+
+  res.json({ publishedPosts, unpublishedPosts });
+};
