@@ -41,16 +41,63 @@ exports.createPost = async (req, res) => {
 };
 
 exports.updatePost = async (req, res) => {
-  const updatedPost = await prisma.post.update({
-    where: {
-      id: req.body.postId,
-    },
-    data: {
-      title: req.body.title,
-      content: req.body.content,
-    },
-  });
-  res.json({ updatedPost });
+  const { publish, unpublish } = req.query;
+  if (publish) {
+    await prisma.post.update({
+      where: {
+        id: req.body.id,
+      },
+      data: {
+        published: false,
+      },
+    });
+    const publishedPosts = await prisma.post.findMany({
+      where: {
+        userId: req.user.id,
+        published: true,
+      },
+    });
+    const unpublishedPosts = await prisma.post.findMany({
+      where: {
+        userId: req.user.id,
+        published: false,
+      },
+    });
+    return res.json({ publishedPosts, unpublishedPosts });
+  } else if (unpublish) {
+    await prisma.post.update({
+      where: {
+        id: req.body.id,
+      },
+      data: {
+        published: true,
+      },
+    });
+    const publishedPosts = await prisma.post.findMany({
+      where: {
+        userId: req.user.id,
+        published: true,
+      },
+    });
+    const unpublishedPosts = await prisma.post.findMany({
+      where: {
+        userId: req.user.id,
+        published: false,
+      },
+    });
+    return res.json({ publishedPosts, unpublishedPosts });
+  } else {
+    const updatedPost = await prisma.post.update({
+      where: {
+        id: req.body.postId,
+      },
+      data: {
+        title: req.body.title,
+        content: req.body.content,
+      },
+    });
+    res.json({ updatedPost });
+  }
 };
 
 exports.deletePost = async (req, res) => {
@@ -66,7 +113,6 @@ exports.deletePost = async (req, res) => {
     },
   });
 
-  // Get updated published posts
   const publishedPosts = await prisma.post.findMany({
     where: {
       userId: req.user.id,
@@ -74,7 +120,6 @@ exports.deletePost = async (req, res) => {
     },
   });
 
-  // Get updated unpublished posts
   const unpublishedPosts = await prisma.post.findMany({
     where: {
       userId: req.user.id,
