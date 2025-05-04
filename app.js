@@ -10,7 +10,9 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://blog-frontend-dusky-delta.vercel.app/",
+      "https://blog-frontend-dusky-delta.vercel.app",
+      "blog-frontend-git-main-suix0s-projects.vercel.app",
+      "blog-frontend-85kxmi7e5-suix0s-projects.vercel.app",
     ],
   })
 );
