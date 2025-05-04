@@ -56,7 +56,7 @@ exports.registerUser = [
       data: {
         username: req.body.username,
         password: encryptedPassword,
-        role: req.body.role === "ADMIN" ? "ADMIN" : "USER",
+        role: req.body.role === true ? "ADMIN" : "USER",
       },
     });
 
