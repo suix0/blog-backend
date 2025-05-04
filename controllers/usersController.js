@@ -11,7 +11,7 @@ const validateUser = [
     .notEmpty()
     .withMessage("Username can't be empty.")
     .custom(async (value) => {
-      const username = await prisma.user.findMany({
+      const username = await prisma.user.findUnique({
         where: {
           username: value,
         },
